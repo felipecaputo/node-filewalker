@@ -401,25 +401,15 @@ describe('Filewalker', function() {
 describe('feature: apply regex for folders', function() {
     var fw;
     beforeEach(function() {
-      fw = filewalker(examplesDir, {matchFolderRegExp: new RegExp("((?!(nodemodules)).)*\w")});
+      fw = filewalker(examplesDir, {ignoredFolders: ['foo']});
     });
     afterEach(function() {
       fw = null;
-    });  
-      
-    it('"done" .files must be 0', function(done) {
-      fw.on('done', function() {
-        //checks if it didn't process the files
-        assert.strictEqual(fw.files, 0);
-        done();
-      });
-            
-      fw.walk();
     });
     
-    it('"done" .dirs must be ' + examplesNumOfDirs, function(done) {
+    it('"done" .dirs must be 0', function(done) {
         fw.on('done', function() {
-          assert.strictEqual(fw.dirs, examplesNumOfDirs);
+          assert.strictEqual(fw.dirs, 0);
         });
         fw.on('done', done);
         fw.walk();
