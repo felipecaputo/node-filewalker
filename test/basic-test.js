@@ -1,4 +1,4 @@
-
+/* global describe, it, beforeEach, afterEach, __dirname, __filename */
 var assert = require('assert');
 var filewalker = require('..');
 
@@ -25,7 +25,7 @@ describe('Filewalker', function() {
   });
   
   describe('Instances of a filewalker-class', function() {
-    var fw;
+    var fw;    
     beforeEach(function() {
       fw = filewalker(examplesDir);
     });
@@ -369,4 +369,61 @@ describe('Filewalker', function() {
       fw.walk();
     });
   });
+  
+  describe('feature: ignore files', function() {
+    var fw;
+    beforeEach(function() {
+      fw = filewalker(examplesDir, {ignoreFiles: true});
+    });
+    afterEach(function() {
+      fw = null;
+    });  
+      
+    it('"done" .files must be 0', function(done) {
+      fw.on('done', function() {
+        //checks if it didn't process the files
+        assert.strictEqual(fw.files, 0);
+        done();
+      });
+            
+      fw.walk();
+    });
+    
+    it('"done" .dirs must be ' + examplesNumOfDirs, function(done) {
+        fw.on('done', function() {
+          assert.strictEqual(fw.dirs, examplesNumOfDirs);
+        });
+        fw.on('done', done);
+        fw.walk();
+    });    
+  });
+  
+describe('feature: apply regex for folders', function() {
+    var fw;
+    beforeEach(function() {
+      fw = filewalker(examplesDir, {matchFolderRegExp: new RegExp("((?!(nodemodules)).)*\w")});
+    });
+    afterEach(function() {
+      fw = null;
+    });  
+      
+    it('"done" .files must be 0', function(done) {
+      fw.on('done', function() {
+        //checks if it didn't process the files
+        assert.strictEqual(fw.files, 0);
+        done();
+      });
+            
+      fw.walk();
+    });
+    
+    it('"done" .dirs must be ' + examplesNumOfDirs, function(done) {
+        fw.on('done', function() {
+          assert.strictEqual(fw.dirs, examplesNumOfDirs);
+        });
+        fw.on('done', done);
+        fw.walk();
+    });    
+  });  
+  
 });
